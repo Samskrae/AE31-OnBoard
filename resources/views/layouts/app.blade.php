@@ -10,12 +10,12 @@
     <script src="https://kit.fontawesome.com/f750d98763.js" crossorigin="anonymous"></script>   
 </head>
 <body>
-<header class="bg-gray-300 shadow-xl">
-  <nav class="relative flex items-center justify-center p-4 h-32">
+<header class="bg-gray-300 shadow-xl z-1 fixed w-full">
+  <nav class="relative flex items-center justify-center p-4 h-32 ">
     <!-- Logo (posición absoluta para que no mueva el centro) -->
     <div class="absolute left-5 flex items-center">
       <img 
-        src="https://media.discordapp.net/attachments/1078622212652793898/1435252520401375332/Imagen_de_WhatsApp_2025-11-04_a_las_12.46.02_cdd0273f.png?ex=690b4a92&is=6909f912&hm=3a3c302a9c2ff4227986db26c51aea6f1783af1e82447d876fefcc285a2655af&=&format=webp&quality=lossless" 
+        src="{{ asset('imagenes/logo.png') }}" 
         alt="logo" 
         class="h-24 object-contain"
       />
@@ -37,7 +37,7 @@
 
 
 
-    <main class="container">
+    <main class="min-h-screen p-6 text-center bg-gray-100">
         @yield('content')
     </main>
 
