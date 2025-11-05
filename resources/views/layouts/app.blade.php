@@ -8,10 +8,12 @@
     <!-- <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css"> -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://kit.fontawesome.com/f750d98763.js" crossorigin="anonymous"></script>   
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 <body>
-<header class="bg-gray-300 shadow-xl z-1 fixed w-full">
-  <nav class="relative flex items-center justify-center p-4 h-32 ">
+<header class="bg-gray-300 shadow-xl z-1 fixed w-full z-[9999]">
+  <nav class="relative flex items-center justify-center p-4 h-32 z-100">
     <!-- Logo (posición absoluta para que no mueva el centro) -->
     <div class="absolute left-5 flex items-center">
       <img 
