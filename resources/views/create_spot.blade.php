@@ -2,7 +2,7 @@
 
 @section('content')
 <!-- El siguiente div servirá para que no se cree nada debajo del nav -->
-<div class="p-15 bg-red-300" id="bordeSuperior"></div>
+<div class="p-15" id="bordeSuperior"></div>
 <h2>Registrar nuevo Spot</h2>
 
 @if ($errors->any())
@@ -15,13 +15,15 @@
     </div>
 @endif
 
-<form action="{{ route('spots.store') }}" method="POST" class="flex flex-col gap-1 max-w-md mx-auto">
+<form action="{{ route('spots.store') }}" method="POST" class="flex flex-col gap-1 max-w-md mx-auto bg-gray-200 p-6 rounded-2xl shadow-md">
     @csrf
     <label>Nombre:</label>
     <input type="text" name="nombre" value="{{ old('nombre') }}" class="border-2 border-gray-700 focus:border-pink-600 rounded-2xl"><br>
 
-    <label>Ubicación:</label>
-    <input type="text" name="ubicacion" value="{{ old('ubicacion') }}" placeholder="  Formato: lat, lon" class="border-2 border-gray-700 focus:border-pink-600 rounded-2xl"><br>
+    <input type="number" step="any" name="lat" placeholder="Latitud" required>
+<input type="number" step="any" name="lon" placeholder="Longitud" required>
+
+
 
     <label>Descripción:</label>
     <textarea name="descripcion" class="border-2 border-gray-700 focus:border-pink-600 rounded-2xl">{{ old('descripcion') }}</textarea><br>
@@ -36,7 +38,7 @@
             📸 Subir imagen
         </label>
         <input type="file" id="imagen" name="imagen" class="hidden" accept="image/*">
-        <p id="nombre-archivo" class="text-gray-600 text-sm italic">Ningún archivo seleccionado</p>
+        <p id="nombre-archivo" class="text-gray-600 text-sm italic">Las imagenes son opcionales*</p>
     </div><br>
 
     <script>

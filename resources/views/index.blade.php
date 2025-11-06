@@ -32,6 +32,20 @@
             </div>
         </div>
     </div>
+<div class="mt-10">
+  <div class="bg-gray-200 p-10 justify-left align-left rounded-2xl shadow-lg mx-6">
+    <h1 class="text-4xl border-b-4 border-gray-400 w-full pb-2 text-left font-bold">¿Quiénes somos?</h1>
+    <div class="flex flex-row items-center mt-6 ">
+        <p class="mt-6 text-lg text-justify w-2/4 mx-auto">
+            En OnBoard, somos una comunidad apasionada por el skateboarding. Nuestra misión es conectar a skaters de todos los niveles para compartir spots, experiencias y fomentar el crecimiento del skate en nuestra ciudad. Ya seas un principiante buscando tu primer spot o un veterano explorando nuevos desafíos, OnBoard es tu lugar.
+        </p>
+        <img src="{{ asset('imagenes/skate.avif') }}" alt="skateboarding" class="w-1/4 mx-auto mt-6 rounded-2xl shadow-lg transition-transform duration-700 ease-[cubic-bezier(0.68,-0.55,0.27,1.55)] hover:rotate-3 hover:scale-105"/>
+
+
+    </div>
+  </div>
+</div>
+
     @endsection
 </body>
 </html>
