@@ -43,7 +43,10 @@
 
     <!-- Icono de usuario -->
     <div class="absolute right-6 flex items-center text-2xl">
-      <i class="fa-solid fa-user"></i>
+      <a href="{{ route('registro') }}">
+        <i class="fa-solid fa-user"></i>
+      </a>
+      
     </div>
   </nav>
 </header>
