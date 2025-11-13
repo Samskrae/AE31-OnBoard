@@ -3,33 +3,33 @@
 @section('content')
 <div class="p-15" id="bordeSuperior"></div>
 
-<div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black py-12 px-4">
+<div class="min-h-screen text-gray-900 py-12 px-4">
     <div class="max-w-2xl mx-auto">
         <!-- Encabezado -->
         <div class="mb-8 text-center">
-            <h1 class="text-5xl font-bold text-white mb-2">¡Regístrate! 🎉</h1>
+            <h1 class="text-5xl font-bold mb-2">¡Regístrate! 🎉</h1>
             <p class="text-gray-400 text-lg">Únete a la comunidad de skateboarding más emocionante</p>
         </div>
 
         <!-- Alertas de éxito -->
         @if (session('success'))
-            <div class="mb-6 bg-green-900/30 border-2 border-green-500 rounded-xl p-4 backdrop-blur-sm flex items-start gap-3">
+            <div class="mb-6 bg-green-50 border border-green-200 rounded-xl p-4 flex items-start gap-3">
                 <span class="text-2xl">✅</span>
                 <div>
-                    <h3 class="text-green-300 font-bold mb-1">¡Registro exitoso!</h3>
-                    <p class="text-green-200">{{ session('success') }}</p>
+                    <h3 class="text-green-700 font-bold mb-1">¡Registro exitoso!</h3>
+                    <p class="text-green-700">{{ session('success') }}</p>
                 </div>
             </div>
         @endif
 
         <!-- Alertas de error -->
         @if ($errors->any())
-            <div class="mb-6 bg-red-900/30 border-2 border-red-500 rounded-xl p-4 backdrop-blur-sm">
+            <div class="mb-6 bg-red-50 border border-red-200 rounded-xl p-4">
                 <div class="flex items-start gap-3">
                     <span class="text-2xl">⚠️</span>
                     <div>
-                        <h3 class="text-red-300 font-bold mb-2">Errores en el formulario:</h3>
-                        <ul class="space-y-1 text-red-200">
+                        <h3 class="text-red-700 font-bold mb-2">Errores en el formulario:</h3>
+                        <ul class="space-y-1 text-red-600">
                             @foreach ($errors->all() as $error)
                                 <li class="flex items-center gap-2">
                                     <span>→</span> {{ $error }}
@@ -42,12 +42,12 @@
         @endif
 
         <!-- Tarjeta de formulario -->
-        <form action="{{ route('guardar.csv') }}" method="POST" class="bg-gray-800/50 backdrop-blur-md border-2 border-gray-700 rounded-2xl p-8 shadow-2xl">
+        <form action="{{ route('guardar.csv') }}" method="POST" class="bg-white rounded-2xl border border-gray-200 p-8 shadow">
             @csrf
 
             <!-- Campo: Nombre Completo -->
             <div class="mb-6">
-                <label for="name" class="block text-white font-bold text-lg mb-2">
+                <label for="name" class="block text-gray-900 font-bold text-lg mb-2">
                     👤 Nombre Completo
                 </label>
                 <input 
@@ -56,17 +56,17 @@
                     name="name"
                     value="{{ old('name') }}"
                     placeholder="Ej: Juan Pérez García"
-                    class="w-full px-4 py-3 bg-gray-700 border-2 @error('name') border-red-500 @else border-gray-600 @enderror rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/50 transition"
+                    class="w-full px-4 py-3 bg-gray-100 text-gray-900 rounded-lg border border-gray-200 @error('name') border-red-300 @endif focus:outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-200 transition"
                 >
                 @error('name')
-                    <p class="text-red-400 text-sm mt-2 flex items-center gap-1">❌ {{ $message }}</p>
+                    <p class="text-red-600 text-sm mt-2 flex items-center gap-1">❌ {{ $message }}</p>
                 @enderror
                 <p class="text-gray-400 text-xs mt-1">Entre 3 y 100 caracteres, solo letras</p>
             </div>
 
             <!-- Campo: Correo Electrónico -->
             <div class="mb-6">
-                <label for="email" class="block text-white font-bold text-lg mb-2">
+                <label for="email" class="block text-gray-900 font-bold text-lg mb-2">
                     📧 Correo Electrónico
                 </label>
                 <input 
@@ -75,17 +75,17 @@
                     name="email"
                     value="{{ old('email') }}"
                     placeholder="Ej: juan@ejemplo.com"
-                    class="w-full px-4 py-3 bg-gray-700 border-2 @error('email') border-red-500 @else border-gray-600 @enderror rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/50 transition"
+                    class="w-full px-4 py-3 bg-gray-100 text-gray-900 rounded-lg border border-gray-200 @error('email') border-red-300 @endif focus:outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-200 transition"
                 >
                 @error('email')
-                    <p class="text-red-400 text-sm mt-2 flex items-center gap-1">❌ {{ $message }}</p>
+                    <p class="text-red-600 text-sm mt-2 flex items-center gap-1">❌ {{ $message }}</p>
                 @enderror
                 <p class="text-gray-400 text-xs mt-1">Debe ser un email válido y único</p>
             </div>
 
             <!-- Campo: Contraseña -->
             <div class="mb-6">
-                <label for="password" class="block text-white font-bold text-lg mb-2">
+                <label for="password" class="block text-gray-900 font-bold text-lg mb-2">
                     🔐 Contraseña
                 </label>
                 <input 
@@ -93,17 +93,17 @@
                     id="password" 
                     name="password"
                     placeholder="Mínimo 6 caracteres"
-                    class="w-full px-4 py-3 bg-gray-700 border-2 @error('password') border-red-500 @else border-gray-600 @enderror rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/50 transition"
+                    class="w-full px-4 py-3 bg-gray-100 text-gray-900 rounded-lg border border-gray-200 @error('password') border-red-300 @endif focus:outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-200 transition"
                 >
                 @error('password')
-                    <p class="text-red-400 text-sm mt-2 flex items-center gap-1">❌ {{ $message }}</p>
+                    <p class="text-red-600 text-sm mt-2 flex items-center gap-1">❌ {{ $message }}</p>
                 @enderror
                 <p class="text-gray-400 text-xs mt-1">Mínimo 6 caracteres para mayor seguridad</p>
             </div>
 
             <!-- Campo: Fecha de Nacimiento -->
             <div class="mb-6">
-                <label for="date" class="block text-white font-bold text-lg mb-2">
+                <label for="date" class="block text-gray-900 font-bold text-lg mb-2">
                     🎂 Fecha de Nacimiento
                 </label>
                 <input 
@@ -111,17 +111,17 @@
                     id="date" 
                     name="date"
                     value="{{ old('date') }}"
-                    class="w-full px-4 py-3 bg-gray-700 border-2 @error('date') border-red-500 @else border-gray-600 @enderror rounded-lg text-white focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/50 transition"
+                    class="w-full px-4 py-3 bg-gray-100 text-gray-900 rounded-lg border border-gray-200 @error('date') border-red-300 @endif focus:outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-200 transition"
                 >
                 @error('date')
-                    <p class="text-red-400 text-sm mt-2 flex items-center gap-1">❌ {{ $message }}</p>
+                    <p class="text-red-600 text-sm mt-2 flex items-center gap-1">❌ {{ $message }}</p>
                 @enderror
                 <p class="text-gray-400 text-xs mt-1">No puede ser una fecha futura</p>
             </div>
 
             <!-- Campo: Biografía -->
             <div class="mb-8">
-                <label for="bio" class="block text-white font-bold text-lg mb-2">
+                <label for="bio" class="block text-gray-900 font-bold text-lg mb-2">
                     📝 Biografía (Opcional)
                 </label>
                 <textarea 
@@ -129,14 +129,14 @@
                     name="bio"
                     rows="5"
                     placeholder="Cuéntanos sobre ti, tu experiencia en skateboarding, tus tricks favoritos, etc."
-                    class="w-full px-4 py-3 bg-gray-700 border-2 @error('bio') border-red-500 @else border-gray-600 @enderror rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/50 transition resize-none"
+                    class="w-full px-4 py-3 bg-gray-100 text-gray-900 rounded-lg border border-gray-200 @error('bio') border-red-300 @endif focus:outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-200 transition resize-none"
                 >{{ old('bio') }}</textarea>
                 @error('bio')
-                    <p class="text-red-400 text-sm mt-2 flex items-center gap-1">❌ {{ $message }}</p>
+                    <p class="text-red-600 text-sm mt-2 flex items-center gap-1">❌ {{ $message }}</p>
                 @enderror
                 <div class="flex justify-between items-center mt-1">
-                    <p class="text-gray-400 text-xs">Campo opcional</p>
-                    <span id="bioCharCount" class="text-gray-400 text-xs">0/500</span>
+                    <p class="text-gray-600 text-xs">Campo opcional</p>
+                    <span id="bioCharCount" class="text-gray-600 text-xs">0/500</span>
                 </div>
             </div>
 
@@ -149,7 +149,7 @@
                     class="mt-1 w-5 h-5 rounded border-2 border-gray-600 accent-pink-500 cursor-pointer"
                     required
                 >
-                <label for="terms" class="text-gray-300 text-sm">
+                <label for="terms" class="text-gray-500 text-sm">
                     Acepto los <a href="#" class="text-pink-400 hover:text-pink-300 underline">términos y condiciones</a> y la 
                     <a href="#" class="text-pink-400 hover:text-pink-300 underline">política de privacidad</a>
                 </label>
@@ -159,13 +159,13 @@
             <div class="flex gap-4 justify-center md:justify-end">
                 <a 
                     href="{{ route('home') }}"
-                    class="px-8 py-3 bg-gray-700 text-white font-bold rounded-lg hover:bg-gray-600 transition transform hover:scale-105"
+                    class="px-8 py-3 bg-gray-100 text-gray-900 font-bold rounded-lg hover:bg-gray-200 transition transform hover:scale-105 border border-gray-200"
                 >
                     ❌ Cancelar
                 </a>
                 <button 
                     type="submit"
-                    class="px-8 py-3 bg-gradient-to-r from-pink-600 to-pink-500 text-white font-bold rounded-lg hover:from-pink-700 hover:to-pink-600 transition transform hover:scale-105 shadow-lg"
+                    class="px-8 py-3 bg-gray-800 text-white font-bold rounded-lg hover:bg-gray-700 transition transform hover:scale-105 shadow"
                 >
                     ✅ Registrarse
                 </button>

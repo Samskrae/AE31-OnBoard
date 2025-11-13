@@ -3,17 +3,17 @@
 @section('content')
 <div class="p-15" id="bordeSuperior"></div>
 
-<div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black py-12 px-4">
+<div class="min-h-screen text-gray-900 py-12 px-4">
     <div class="max-w-2xl mx-auto">
         <!-- Encabezado -->
         <div class="mb-8 text-center">
-            <h1 class="text-5xl font-bold text-white mb-2">🛹 Nuevo Spot</h1>
+            <h1 class="text-5xl font-bold mb-2">🛹 Nuevo Spot</h1>
             <p class="text-gray-400 text-lg">Comparte tu spot de skateboarding favorito con la comunidad</p>
         </div>
 
         <!-- Alertas de error -->
         @if ($errors->any())
-            <div class="mb-6 bg-red-900/30 border-2 border-red-500 rounded-xl p-4 backdrop-blur-sm">
+            <div class="mb-6 bg-red-50 border border-red-200 rounded-xl p-4">
                 <div class="flex items-start gap-3">
                     <span class="text-2xl">⚠️</span>
                     <div>
@@ -31,12 +31,12 @@
         @endif
 
         <!-- Tarjeta de formulario -->
-        <form action="{{ route('spots.store') }}" method="POST" enctype="multipart/form-data" class="bg-gray-800/50 backdrop-blur-md border-2 border-gray-700 rounded-2xl p-8 shadow-2xl">
+        <form action="{{ route('spots.store') }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-2xl border border-gray-200 p-8 shadow">
             @csrf
 
             <!-- Campo: Nombre -->
             <div class="mb-6">
-                <label for="nombre" class="block text-white font-bold text-lg mb-2">
+                <label for="nombre" class="block text-gray-900 font-bold text-lg mb-2">
                     📍 Nombre del Spot
                 </label>
                 <input 
@@ -45,10 +45,10 @@
                     name="nombre" 
                     value="{{ old('nombre') }}"
                     placeholder="Ej: Plaza Central del Parque"
-                    class="w-full px-4 py-3 bg-gray-700 border-2 @error('nombre') border-red-500 @else border-gray-600 @enderror rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/50 transition"
+                    class="w-full px-4 py-3 bg-gray-100 text-gray-900 rounded-lg border border-gray-200 @error('nombre') border-red-300 @endif focus:outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-200 transition"
                 >
                 @error('nombre')
-                    <p class="text-red-400 text-sm mt-2 flex items-center gap-1">❌ {{ $message }}</p>
+                    <p class="text-red-600 text-sm mt-2 flex items-center gap-1">❌ {{ $message }}</p>
                 @enderror
                 <p class="text-gray-400 text-xs mt-1">Mínimo 3 caracteres, máximo 100</p>
             </div>
@@ -57,7 +57,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <!-- Latitud -->
                 <div>
-                    <label for="lat" class="block text-white font-bold text-lg mb-2">
+                    <label for="lat" class="block font-bold text-lg mb-2">
                         🧭 Latitud
                     </label>
                     <input 
@@ -67,17 +67,17 @@
                         step="any"
                         value="{{ old('lat') }}"
                         placeholder="Ej: 28.1235"
-                        class="w-full px-4 py-3 bg-gray-700 border-2 @error('lat') border-red-500 @else border-gray-600 @enderror rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/50 transition"
+                        class="w-full px-4 py-3 bg-gray-100 text-gray-900 rounded-lg border border-gray-200 @error('lat') border-red-300 @endif focus:outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-200 transition"
                     >
                     @error('lat')
-                        <p class="text-red-400 text-sm mt-2 flex items-center gap-1">❌ {{ $message }}</p>
+                        <p class="text-red-600 text-sm mt-2 flex items-center gap-1">❌ {{ $message }}</p>
                     @enderror
                     <p class="text-gray-400 text-xs mt-1">Entre -90 y 90</p>
                 </div>
 
                 <!-- Longitud -->
                 <div>
-                    <label for="lon" class="block text-white font-bold text-lg mb-2">
+                    <label for="lon" class="block font-bold text-lg mb-2">
                         🧭 Longitud
                     </label>
                     <input 
@@ -87,10 +87,10 @@
                         step="any"
                         value="{{ old('lon') }}"
                         placeholder="Ej: -15.4363"
-                        class="w-full px-4 py-3 bg-gray-700 border-2 @error('lon') border-red-500 @else border-gray-600 @enderror rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/50 transition"
+                        class="w-full px-4 py-3 bg-gray-100 text-gray-900 rounded-lg border border-gray-200 @error('lon') border-red-300 @endif focus:outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-200 transition"
                     >
                     @error('lon')
-                        <p class="text-red-400 text-sm mt-2 flex items-center gap-1">❌ {{ $message }}</p>
+                        <p class="text-red-600 text-sm mt-2 flex items-center gap-1">❌ {{ $message }}</p>
                     @enderror
                     <p class="text-gray-400 text-xs mt-1">Entre -180 y 180</p>
                 </div>
@@ -98,7 +98,7 @@
 
             <!-- Campo: Descripción -->
             <div class="mb-6">
-                <label for="descripcion" class="block text-white font-bold text-lg mb-2">
+                <label for="descripcion" class="block font-bold text-lg mb-2">
                     📝 Descripción
                 </label>
                 <textarea 
@@ -106,26 +106,26 @@
                     name="descripcion"
                     rows="5"
                     placeholder="Describe el spot: ubicación exacta, características, dificultad, etc."
-                    class="w-full px-4 py-3 bg-gray-700 border-2 @error('descripcion') border-red-500 @else border-gray-600 @enderror rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/50 transition resize-none"
+                    class="w-full px-4 py-3 bg-gray-100 text-gray-900 rounded-lg border border-gray-200 @error('descripcion') border-red-300 @endif focus:outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-200 transition resize-none"
                 >{{ old('descripcion') }}</textarea>
                 @error('descripcion')
-                    <p class="text-red-400 text-sm mt-2 flex items-center gap-1">❌ {{ $message }}</p>
+                    <p class="text-red-600 text-sm mt-2 flex items-center gap-1">❌ {{ $message }}</p>
                 @enderror
                 <div class="flex justify-between items-center mt-1">
-                    <p class="text-gray-400 text-xs">Mínimo 10 caracteres</p>
-                    <span id="charCount" class="text-gray-400 text-xs">0/500</span>
+                    <p class="text-gray-600 text-xs">Mínimo 10 caracteres</p>
+                    <span id="charCount" class="text-gray-600 text-xs">0/500</span>
                 </div>
             </div>
 
             <!-- Campo: Nivel de Dificultad -->
             <div class="mb-6">
-                <label for="nivel" class="block text-white font-bold text-lg mb-2">
+                <label for="nivel" class="block font-bold text-lg mb-2">
                     ⚡ Nivel de Dificultad
                 </label>
                 <select 
                     id="nivel" 
                     name="nivel"
-                    class="w-full px-4 py-3 bg-gray-700 border-2 @error('nivel') border-red-500 @else border-gray-600 @enderror rounded-lg text-white focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/50 transition"
+                    class="w-full px-4 py-3 bg-gray-100 text-gray-900 rounded-lg border border-gray-200 @error('nivel') border-red-300 @endif focus:outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-200 transition"
                 >
                     <option value="">-- Selecciona un nivel --</option>
                     <option value="Principiante" @selected(old('nivel') === 'Principiante')>🟢 Principiante</option>
@@ -139,11 +139,11 @@
 
             <!-- Campo: Imagen (Drag & Drop) -->
             <div class="mb-8">
-                <label for="imagen" class="block text-white font-bold text-lg mb-2">
+                <label for="imagen" class="block font-bold text-lg mb-2">
                     📸 Imagen del Spot
                 </label>
                 
-                <div id="dropZone" class="border-3 border-dashed @error('imagen') border-red-500 @else border-gray-600 @enderror rounded-xl p-8 text-center cursor-pointer transition hover:border-pink-500 hover:bg-gray-700/50 bg-gray-700/30">
+                <div id="dropZone" class="border-3 border-dashed rounded-xl p-8 text-center cursor-pointer transition border border-gray-200 bg-gray-100 hover:border-gray-300">
                     <input 
                         type="file" 
                         id="imagen" 
@@ -154,34 +154,34 @@
                     
                     <div id="dropContent" class="space-y-2">
                         <p class="text-4xl">🖼️</p>
-                        <p class="text-white font-bold">Arrastra una imagen aquí</p>
-                        <p class="text-gray-400 text-sm">o haz clic para seleccionar</p>
+                        <p class="text-gray-900 font-bold">Arrastra una imagen aquí</p>
+                        <p class="text-gray-600 text-sm">o haz clic para seleccionar</p>
                         <p class="text-gray-500 text-xs mt-2">Formatos: JPEG, PNG, GIF, WebP, AVIF (máx. 2MB)</p>
                     </div>
                     
                     <div id="fileInfo" class="hidden space-y-2">
                         <p class="text-4xl">✅</p>
-                        <p id="fileName" class="text-white font-bold text-sm"></p>
+                        <p id="fileName" class= font-bold text-sm"></p>
                     </div>
                 </div>
                 
                 @error('imagen')
-                    <p class="text-red-400 text-sm mt-2 flex items-center gap-1">❌ {{ $message }}</p>
+                    <p class="text-red-600 text-sm mt-2 flex items-center gap-1">❌ {{ $message }}</p>
                 @enderror
-                <p class="text-gray-400 text-xs mt-2">Las imágenes son opcionales</p>
+                <p class="text-gray-600 text-xs mt-2">Las imágenes son opcionales</p>
             </div>
 
             <!-- Botones de Acción -->
             <div class="flex gap-4 justify-center md:justify-end">
                 <a 
                     href="{{ route('spots.index') }}"
-                    class="px-8 py-3 bg-gray-700 text-white font-bold rounded-lg hover:bg-gray-600 transition transform hover:scale-105"
+                    class="px-8 py-3 bg-gray-100 text-gray-900 font-bold rounded-lg hover:bg-gray-200 transition transform hover:scale-105 border border-gray-200"
                 >
                     ❌ Cancelar
                 </a>
                 <button 
                     type="submit"
-                    class="px-8 py-3 bg-gradient-to-r from-pink-600 to-pink-500 text-white font-bold rounded-lg hover:from-pink-700 hover:to-pink-600 transition transform hover:scale-105 shadow-lg"
+                    class="px-8 py-3 bg-gray-800 text-white font-bold rounded-lg hover:bg-gray-700 transition transform hover:scale-105 shadow"
                 >
                     ✅ Guardar Spot
                 </button>

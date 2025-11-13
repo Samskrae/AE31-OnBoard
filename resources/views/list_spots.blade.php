@@ -3,12 +3,12 @@
 @section('content')
 <div class="p-15" id="bordeSuperior"></div>
 
-<div class="min-h-screen bg-gray-900 text-white">
+<div class="min-h-screen bg-gray-50 text-gray-900 rounded-lg shadow">
     <!-- Encabezado -->
-    <div class="bg-gradient-to-r from-gray-900 to-gray-800 border-b-2 border-pink-500 p-6">
+    <div class="bg-white border-b border-gray-200 p-6 rounded-2xl">
         <div class="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-4">
             <h1 class="text-4xl font-bold">🛹 Spots de Skateboarding</h1>
-            <a href="{{ route('spots.create') }}" class="bg-pink-600 hover:bg-pink-700 px-6 py-2 rounded-lg font-bold transition transform hover:scale-105">
+            <a href="{{ route('spots.create') }}" class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-2 rounded-lg font-bold transition transform hover:scale-105">
                 ➕ Nuevo Spot
             </a>
         </div>
@@ -16,14 +16,14 @@
 
     <!-- Mensajes -->
     @if (session('success'))
-        <div class="bg-green-900/30 border-l-4 border-green-500 p-4 m-6 rounded">
-            <p class="text-green-300 font-semibold">{{ session('success') }}</p>
+        <div class="bg-green-50 border-l-4 border-green-400 p-4 m-6 rounded">
+            <p class="text-green-700 font-semibold">{{ session('success') }}</p>
         </div>
     @endif
 
     <div class="max-w-7xl mx-auto p-6">
         <!-- Controles: Búsqueda, Filtro y Selector de Vista -->
-        <div class="bg-gray-800 rounded-xl p-6 mb-6 border-2 border-gray-700">
+        <div class="bg-white rounded-xl p-6 mb-6 border border-gray-200">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <!-- Búsqueda -->
                 <div class="relative">
@@ -31,14 +31,14 @@
                         type="text" 
                         id="searchInput" 
                         placeholder="🔍 Buscar por nombre..." 
-                        class="w-full px-4 py-3 bg-gray-700 text-white rounded-lg border-2 border-gray-600 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/50 outline-none transition"
+                        class="w-full px-4 py-3 bg-gray-100 text-gray-900 rounded-lg border border-gray-200 focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none transition"
                     >
                 </div>
 
                 <!-- Filtro por Nivel -->
                 <select 
                     id="filterLevel" 
-                    class="px-4 py-3 bg-gray-700 text-white rounded-lg border-2 border-gray-600 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/50 outline-none transition"
+                    class="px-4 py-3 bg-gray-100 text-gray-900 rounded-lg border border-gray-200 focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none transition"
                 >
                     <option value="">📊 Todos los niveles</option>
                     <option value="Principiante">🟢 Principiante</option>
@@ -50,13 +50,13 @@
                 <div class="flex gap-2 justify-end">
                     <button 
                         id="tableViewBtn" 
-                        class="px-6 py-3 bg-pink-600 hover:bg-pink-700 rounded-lg font-bold transition transform hover:scale-105 flex items-center gap-2"
+                        class="px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-lg font-bold transition transform hover:scale-105 flex items-center gap-2"
                     >
                         📋 Tabla
                     </button>
                     <button 
                         id="mapViewBtn" 
-                        class="px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg font-bold transition transform hover:scale-105 flex items-center gap-2"
+                        class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-lg font-bold transition transform hover:scale-105 flex items-center gap-2"
                     >
                         🗺️ Mapa
                     </button>
@@ -64,7 +64,7 @@
             </div>
 
             <!-- Contador de resultados -->
-            <div class="text-gray-400 text-sm">
+            <div class="text-gray-600 text-sm">
                 Mostrando <span id="resultCount">{{ count($spots) }}</span> de {{ count($spots) }} spots
             </div>
         </div>
@@ -81,29 +81,29 @@
                     </a>
                 </div>
             @else
-                <div class="bg-gray-800 rounded-xl overflow-hidden border-2 border-gray-700 shadow-xl">
+                <div class="bg-white rounded-xl overflow-hidden border border-gray-200 shadow">
                     <div class="overflow-x-auto">
                         <table class="w-full">
                             <thead>
-                                <tr class="bg-gray-900 border-b-2 border-pink-500">
-                                    <th class="px-6 py-4 text-left font-bold">Nombre</th>
-                                    <th class="px-6 py-4 text-left font-bold">Descripción</th>
-                                    <th class="px-6 py-4 text-center font-bold">Nivel</th>
-                                    <th class="px-6 py-4 text-center font-bold">Imagen</th>
-                                    <th class="px-6 py-4 text-center font-bold">Coordenadas</th>
-                                    <th class="px-6 py-4 text-center font-bold">Acciones</th>
+                                <tr class="bg-gray-50 border-b border-gray-200">
+                                    <th class="px-6 py-4 text-left font-bold text-gray-800">Nombre</th>
+                                    <th class="px-6 py-4 text-left font-bold text-gray-800">Descripción</th>
+                                    <th class="px-6 py-4 text-center font-bold text-gray-800">Nivel</th>
+                                    <th class="px-6 py-4 text-center font-bold text-gray-800">Imagen</th>
+                                    <th class="px-6 py-4 text-center font-bold text-gray-800">Coordenadas</th>
+                                    <th class="px-6 py-4 text-center font-bold text-gray-800">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody id="spotTableBody">
                                 @foreach ($spots as $index => $spot)
-                                    <tr class="border-b border-gray-700 hover:bg-gray-700/50 transition spot-row" data-name="{{ strtolower($spot['nombre']) }}" data-level="{{ $spot['nivel'] }}">
-                                        <td class="px-6 py-4 font-bold text-white">{{ $spot['nombre'] }}</td>
-                                        <td class="px-6 py-4 text-gray-300 text-sm max-w-xs truncate">{{ $spot['descripcion'] }}</td>
+                                    <tr class="border-b border-gray-100 hover:bg-gray-50 transition spot-row" data-name="{{ strtolower($spot['nombre']) }}" data-level="{{ $spot['nivel'] }}">
+                                        <td class="px-6 py-4 font-bold text-gray-900">{{ $spot['nombre'] }}</td>
+                                        <td class="px-6 py-4 text-gray-600 text-sm max-w-xs truncate">{{ $spot['descripcion'] }}</td>
                                         <td class="px-6 py-4 text-center">
                                             <span class="px-3 py-1 rounded-full font-bold text-sm
-                                                @if ($spot['nivel'] === 'Principiante') bg-green-900 text-green-300
-                                                @elseif ($spot['nivel'] === 'Intermedio') bg-yellow-900 text-yellow-300
-                                                @else bg-red-900 text-red-300
+                                                @if ($spot['nivel'] === 'Principiante') bg-green-100 text-green-800
+                                                @elseif ($spot['nivel'] === 'Intermedio') bg-yellow-100 text-yellow-800
+                                                @else bg-red-100 text-red-800
                                                 @endif
                                             ">
                                                 @if ($spot['nivel'] === 'Principiante') 🟢
@@ -131,7 +131,7 @@
                                             <form action="{{ route('spots.destroy', $index) }}" method="POST" class="inline-block" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este spot?');">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="text-2xl hover:scale-125 transition text-red-400 hover:text-red-300">
+                                                <button type="submit" class="text-2xl hover:scale-125 transition text-red-600 hover:text-red-800">
                                                     🗑️
                                                 </button>
                                             </form>
@@ -149,7 +149,7 @@
                         <form action="{{ route('spots.deleteAll') }}" method="POST" onsubmit="return confirm('⚠️ ADVERTENCIA: Esto eliminará TODOS los spots. ¿Estás completamente seguro?');" class="inline-block">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="bg-red-900 hover:bg-red-800 text-red-200 px-6 py-2 rounded-lg font-bold transition flex items-center gap-2">
+                            <button type="submit" class="bg-red-100 hover:bg-red-200 text-red-700 px-6 py-2 rounded-lg font-bold transition flex items-center gap-2 border border-red-200">
                                 🗑️ Eliminar Todos
                             </button>
                         </form>
@@ -160,17 +160,17 @@
 
         <!-- VISTA: MAPA -->
         <div id="mapView" class="hidden">
-            <div id="map" class="h-screen rounded-xl border-2 border-gray-700 shadow-xl"></div>
+            <div id="map" class="h-screen rounded-xl border border-gray-200 shadow"></div>
         </div>
     </div>
 </div>
 
 <!-- Modal de Imagen -->
-<div id="imageModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-    <div class="bg-gray-800 rounded-xl border-2 border-pink-500 max-w-2xl max-h-[90vh] overflow-auto">
-        <div class="flex justify-between items-center p-4 border-b border-gray-700">
-            <h3 id="modalTitle" class="text-xl font-bold text-white"></h3>
-            <button id="closeModal" class="text-2xl text-gray-400 hover:text-white">✕</button>
+<div id="imageModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-xl border border-gray-200 max-w-2xl max-h-[90vh] overflow-auto">
+        <div class="flex justify-between items-center p-4 border-b border-gray-100">
+            <h3 id="modalTitle" class="text-xl font-bold text-gray-900"></h3>
+            <button id="closeModal" class="text-2xl text-gray-600 hover:text-gray-900">✕</button>
         </div>
         <div class="p-4">
             <img id="modalImage" src="" alt="Spot Image" class="w-full rounded-lg">
