@@ -44,3 +44,13 @@ Route::get('/registro', function () {
 // Guardar usuario en CSV
 Route::post('/guardar-csv', [CsvController::class, 'guardar'])->name('guardar.csv');
 
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+});

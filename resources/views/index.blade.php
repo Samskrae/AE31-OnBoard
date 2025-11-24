@@ -1,5 +1,5 @@
 <body class="bg-gray-100 text-gray-900">
-    @extends('layouts.app')
+    @extends('layouts.cuerpo')
     @section('content')
 
     <div class="relative min-h-screen flex items-center justify-center text-center overflow-hidden">
