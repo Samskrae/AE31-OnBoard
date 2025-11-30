@@ -54,3 +54,29 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+
+Route::get('/adminlte/bienvenida', function () {
+    return view('adminlte.bienvenida');
+})->middleware('auth')->name('adminlte.bienvenida');
+
+// Vista del formulario
+Route::get('/adminlte/crear-usuario', function () {
+    return view('adminlte.crear_usuario');
+})->middleware('auth')->name('adminlte.usuario.create');
+
+// Acción del formulario
+Route::post('/adminlte/crear-usuario', function () {
+    request()->validate([
+        'name' => 'required',
+        'email' => 'required|email',
+        'password' => 'required'
+    ]);
+
+    \App\Models\User::create([
+        'name' => request('name'),
+        'email' => request('email'),
+        'password' => bcrypt(request('password')),
+    ]);
+
+    return redirect()->back()->with('message', 'Usuario creado correctamente');
+})->middleware('auth')->name('adminlte.usuario.store');

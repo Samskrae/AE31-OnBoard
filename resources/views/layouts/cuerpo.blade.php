@@ -39,6 +39,8 @@
           <a href="{{ route('spots.index') }}" class="block px-4 py-2 hover:bg-gray-300">Ver Spots</a>
         </div>
       </div>
+
+      <a href="{{ route('adminlte.bienvenida') }}" class="hover:text-blue-600">AdminLTE</a>
     </div>
 
     <!-- Icono de usuario -->
