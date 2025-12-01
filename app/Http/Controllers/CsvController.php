@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
+use App\Models\Registro;
+use Illuminate\Support\Facades\Log;
 
 /**
  * CsvController
@@ -101,33 +102,16 @@ class CsvController extends Controller
                     ->withInput();
             }
 
-            // Ruta del archivo CSV en public/
-            $filePath = public_path('registros.csv');
+            // Guardar en la tabla 'registros' mediante Eloquent
+            Registro::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => bcrypt($validated['password']),
+                'date_of_birth' => $validated['date'],
+                'bio' => $validated['bio'] ?? null,
+            ]);
 
-            // Si no existe, crear el archivo con encabezados
-            if (!File::exists($filePath)) {
-                $this->createCsvWithHeaders($filePath);
-            }
-
-            // Preparar datos para guardar
-            $data = [
-                $validated['name'],
-                $validated['email'],
-                bcrypt($validated['password']),
-                $validated['date'],
-                $validated['bio'] ?? '',
-            ];
-
-            // Abrir el archivo en modo append y escribir datos
-            $file = fopen($filePath, 'a');
-            if ($file) {
-                fputcsv($file, $data, ',', '"'); // Separador coma, comillas dobles
-                fclose($file);
-            } else {
-                throw new \Exception('No se puede abrir el archivo CSV para escribir.');
-            }
-
-            return back()->with('success', '✅ Usuario registrado correctamente en registros.csv');
+            return back()->with('success', '✅ Usuario registrado correctamente en la base de datos');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             return back()->withErrors($e->errors())->withInput();
@@ -143,56 +127,18 @@ class CsvController extends Controller
      * @param string $filePath
      * @return void
      */
-    private function createCsvWithHeaders($filePath)
-    {
-        $header = [
-            'Nombre',
-            'Correo',
-            'Contraseña (hash)',
-            'Fecha de Nacimiento',
-            'Biografía'
-        ];
-
-        $file = fopen($filePath, 'w');
-        if ($file) {
-            fputcsv($file, $header, ',', '"');
-            fclose($file);
-        }
-    }
-
     /**
-     * Verificar si el email ya existe en el CSV
-     * 
+     * Verificar si el email ya existe en la tabla 'registros'
+     *
      * @param string $email
      * @return bool
      */
     private function emailExists($email)
     {
-        $filePath = public_path('registros.csv');
-
-        if (!File::exists($filePath)) {
-            return false;
-        }
-
         try {
-            $file = fopen($filePath, 'r');
-            if (!$file) {
-                return false;
-            }
-
-            // Saltar encabezado
-            fgetcsv($file);
-
-            while (($data = fgetcsv($file)) !== false) {
-                if (isset($data[1]) && strtolower($data[1]) === strtolower($email)) {
-                    fclose($file);
-                    return true;
-                }
-            }
-
-            fclose($file);
-            return false;
+            return Registro::whereRaw('lower(email) = ?', [strtolower($email)])->exists();
         } catch (\Exception $e) {
+            Log::error('Error checking email existence: ' . $e->getMessage());
             return false;
         }
     }

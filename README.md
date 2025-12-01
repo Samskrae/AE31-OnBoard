@@ -58,3 +58,26 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 # AE31-OnBoard
+
+## Configuración rápida después de clonar
+
+ - Copia `.env.example` a `.env` y ajusta las variables según tu entorno.
+ - Para usar Mailtrap (envío de correos en desarrollo) edita `.env` y configura las variables `MAIL_MAILER`, `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME` y `MAIL_PASSWORD` con las credenciales de Mailtrap. En `.env.example` hay un ejemplo comentado.
+ - Instala dependencias y compila assets:
+
+```powershell
+composer install; cp .env.example .env; php artisan key:generate; npm install; npm run build
+```
+
+ - Ejecuta migraciones (la aplicación incluye una migración para la tabla `registros` utilizada en lugar de un fichero CSV):
+
+```powershell
+php artisan migrate
+```
+
+ - Si quieres ejecutar el servidor de desarrollo:
+
+```powershell
+php artisan serve
+```
+
