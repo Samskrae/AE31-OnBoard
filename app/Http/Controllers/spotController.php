@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Spot;
 
 /**
  * SpotController
@@ -49,17 +50,17 @@ class SpotController extends Controller
                         'string',
                         'min:3',
                         'max:100',
-                        'regex:/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\-\.]+$/' // Solo letras, números, acentos, espacios, guiones y puntos
+                        'regex:/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\-\.]+$/'
                     ],
                     'lat' => [
                         'required',
                         'numeric',
-                        'between:-90,90' // Rango válido de latitud
+                        'between:-90,90'
                     ],
                     'lon' => [
                         'required',
                         'numeric',
-                        'between:-180,180' // Rango válido de longitud
+                        'between:-180,180'
                     ],
                     'descripcion' => [
                         'required',
@@ -76,33 +77,32 @@ class SpotController extends Controller
                         'nullable',
                         'image',
                         'mimes:jpeg,png,gif,webp,avif',
-                        'max:2048' // 2MB máximo
+                        'max:2048'
                     ]
                 ],
                 [
-                    // Mensajes personalizados en español
                     'nombre.required' => 'El nombre del spot es obligatorio.',
                     'nombre.string' => 'El nombre debe ser texto válido.',
                     'nombre.min' => 'El nombre debe tener al menos 3 caracteres.',
                     'nombre.max' => 'El nombre no puede exceder 100 caracteres.',
-                    'nombre.regex' => 'El nombre contiene caracteres no permitidos. Solo se permiten letras, números, acentos, espacios, guiones y puntos.',
-                    
+                    'nombre.regex' => 'El nombre contiene caracteres no permitidos.',
+
                     'lat.required' => 'La latitud es obligatoria.',
                     'lat.numeric' => 'La latitud debe ser un número válido.',
                     'lat.between' => 'La latitud debe estar entre -90 y 90.',
-                    
+
                     'lon.required' => 'La longitud es obligatoria.',
                     'lon.numeric' => 'La longitud debe ser un número válido.',
                     'lon.between' => 'La longitud debe estar entre -180 y 180.',
-                    
+
                     'descripcion.required' => 'La descripción es obligatoria.',
                     'descripcion.string' => 'La descripción debe ser texto válido.',
                     'descripcion.min' => 'La descripción debe tener al menos 10 caracteres.',
                     'descripcion.max' => 'La descripción no puede exceder 500 caracteres.',
-                    
+
                     'nivel.required' => 'Debes seleccionar un nivel de dificultad.',
                     'nivel.in' => 'El nivel debe ser uno de: Principiante, Intermedio o Avanzado.',
-                    
+
                     'imagen.image' => 'El archivo debe ser una imagen válida.',
                     'imagen.mimes' => 'La imagen debe ser de formato: JPEG, PNG, GIF, WebP o AVIF.',
                     'imagen.max' => 'La imagen no puede pesar más de 2MB.',
@@ -117,15 +117,24 @@ class SpotController extends Controller
             $imagenPath = null;
             if ($request->hasFile('imagen')) {
                 try {
-                    // Generar nombre único para la imagen
-                    $nombreArchivo = time() . '_' . uniqid() . '.' . $request->file('imagen')->getClientOriginalExtension();
-                    $imagenPath = $request->file('imagen')->storeAs('spots', $nombreArchivo, 'public');
+                    $nombreArchivo = time() . '_' . uniqid() . '.' .
+                        $request->file('imagen')->getClientOriginalExtension();
+
+                    $imagenPath = $request->file('imagen')->storeAs(
+                        'spots',
+                        $nombreArchivo,
+                        'public'
+                    );
                 } catch (\Exception $e) {
-                    return back()->withErrors(['imagen' => 'Error al guardar la imagen: ' . $e->getMessage()])->withInput();
+                    return back()->withErrors([
+                        'imagen' => 'Error al guardar la imagen: ' . $e->getMessage()
+                    ])->withInput();
                 }
             }
 
-            // Guardar línea CSV
+            // -----------------------------
+            // 🔹 GUARDAR EN CSV (como antes)
+            // -----------------------------
             $line = implode(',', [
                 $validated['nombre'],
                 $validated['lat'],
@@ -137,14 +146,30 @@ class SpotController extends Controller
 
             Storage::append('spots.csv', $line);
 
-            return redirect()->route('spots.index')->with('success', '✅ ¡Spot guardado correctamente!');
+            // -----------------------------
+            // 🔹 GUARDAR EN BASE DE DATOS
+            // -----------------------------
+            Spot::create([
+                'nombre'      => $validated['nombre'],
+                'lat'         => $validated['lat'],
+                'lon'         => $validated['lon'],
+                'descripcion' => $validated['descripcion'],
+                'nivel'       => $validated['nivel'],
+                'imagen'      => $imagenPath,
+            ]);
+
+            return redirect()->route('spots.index')
+                ->with('success', '✅ ¡Spot guardado correctamente!');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             return back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
-            return back()->withErrors(['general' => 'Error al guardar el spot: ' . $e->getMessage()])->withInput();
+            return back()->withErrors([
+                'general' => 'Error al guardar el spot: ' . $e->getMessage()
+            ])->withInput();
         }
     }
+
 
     /**
      * Mostrar listado de spots
