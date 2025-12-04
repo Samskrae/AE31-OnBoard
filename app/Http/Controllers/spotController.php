@@ -17,8 +17,6 @@ class SpotController extends Controller
 {
     /**
      * Mostrar formulario de creación
-     * 
-     * @return \Illuminate\View\View
      */
     public function create()
     {
@@ -26,7 +24,6 @@ class SpotController extends Controller
     }
 
     /**
-     * Guardar nuevo spot con validaciones robustas
      * 
      * Validaciones:
      * - Nombre: Requerido, 3-100 caracteres, solo letras, números y acentos
@@ -35,14 +32,11 @@ class SpotController extends Controller
      * - Descripción: Requerida, mínimo 10 caracteres
      * - Nivel: Debe ser uno de los tres niveles permitidos
      * - Imagen: Archivo de imagen, máximo 2MB
-     * 
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
         try {
-            // Validaciones robustas con mensajes personalizados en español
+            // Validaciones
             $validated = $request->validate(
                 [
                     'nombre' => [
@@ -132,9 +126,6 @@ class SpotController extends Controller
                 }
             }
 
-            // -----------------------------
-            // 🔹 GUARDAR EN CSV (como antes)
-            // -----------------------------
             $line = implode(',', [
                 $validated['nombre'],
                 $validated['lat'],
@@ -146,9 +137,7 @@ class SpotController extends Controller
 
             Storage::append('spots.csv', $line);
 
-            // -----------------------------
-            // 🔹 GUARDAR EN BASE DE DATOS
-            // -----------------------------
+
             Spot::create([
                 'nombre'      => $validated['nombre'],
                 'lat'         => $validated['lat'],
@@ -176,8 +165,7 @@ class SpotController extends Controller
      * 
      * Lee el archivo CSV y convierte los datos en un array
      * de spots con estructura consistente.
-     * 
-     * @return \Illuminate\View\View
+
      */
     public function index()
     {
@@ -188,8 +176,6 @@ class SpotController extends Controller
 
     /**
      * Cargar spots desde el archivo CSV
-     * 
-     * @return array
      */
     private function loadSpotsFromCsv()
     {
@@ -227,9 +213,6 @@ class SpotController extends Controller
 
     /**
      * Eliminar un spot específico
-     * 
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy($id)
     {
@@ -267,8 +250,6 @@ class SpotController extends Controller
 
     /**
      * Eliminar todos los spots
-     * 
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function deleteAll()
     {
@@ -282,10 +263,7 @@ class SpotController extends Controller
 
     /**
      * Sanitizar entrada del usuario
-     * Elimina caracteres peligrosos
      * 
-     * @param string $input
-     * @return string
      */
     private function sanitizeInput($input)
     {

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
  * CsvController
  * 
  * Controlador para gestionar el registro de usuarios
- * y exportar datos a CSV de forma segura.
+ * y exportar datos.
  */
 class CsvController extends Controller
 {
@@ -24,13 +24,10 @@ class CsvController extends Controller
      * - Fecha: Requerida, formato válido
      * - Biografía: Opcional, máximo 500 caracteres
      * 
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function guardar(Request $request)
     {
         try {
-            // Validaciones robustas con mensajes personalizados en español
             $validated = $request->validate(
                 [
                     'name' => [
@@ -63,7 +60,7 @@ class CsvController extends Controller
                     ]
                 ],
                 [
-                    // Mensajes personalizados en español
+                    // Mensajes personalizados de error
                     'name.required' => 'El nombre es obligatorio.',
                     'name.string' => 'El nombre debe ser texto válido.',
                     'name.min' => 'El nombre debe tener al menos 3 caracteres.',
@@ -102,7 +99,7 @@ class CsvController extends Controller
                     ->withInput();
             }
 
-            // Guardar en la tabla 'registros' mediante Eloquent
+            // Guardar en la tabla 'registros'
             Registro::create([
                 'name' => $validated['name'],
                 'email' => $validated['email'],
@@ -120,18 +117,8 @@ class CsvController extends Controller
             return back()->withErrors(['general' => 'Error al registrar: ' . $e->getMessage()])->withInput();
         }
     }
-
-    /**
-     * Crear archivo CSV con encabezados
-     * 
-     * @param string $filePath
-     * @return void
-     */
     /**
      * Verificar si el email ya existe en la tabla 'registros'
-     *
-     * @param string $email
-     * @return bool
      */
     private function emailExists($email)
     {
@@ -145,9 +132,6 @@ class CsvController extends Controller
 
     /**
      * Sanitizar entrada del usuario
-     * 
-     * @param string $input
-     * @return string
      */
     private function sanitizeInput($input)
     {

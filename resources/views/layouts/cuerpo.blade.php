@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OnBoard</title>
-    <!-- Estilos -->
-    <!-- <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css"> -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://kit.fontawesome.com/f750d98763.js" crossorigin="anonymous"></script>   
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />

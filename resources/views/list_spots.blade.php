@@ -22,7 +22,6 @@
     @endif
 
     <div class="max-w-7xl mx-auto p-6">
-        <!-- Controles: Búsqueda, Filtro y Selector de Vista -->
         <div class="bg-white rounded-xl p-6 mb-6 border border-gray-200">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <!-- Búsqueda -->

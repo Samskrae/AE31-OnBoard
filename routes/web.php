@@ -13,10 +13,6 @@ Route::get('/', function () {
     return view('index');
 })->name('home');
 
-// ========================================
-// RUTAS DE SPOTS (Requisitos 3, 4, 5)
-// ========================================
-
 // Formulario para crear nuevo spot
 Route::get('/spots/create', [SpotController::class, 'create'])->name('spots.create');
 
@@ -32,10 +28,6 @@ Route::delete('/spots/{id}', [SpotController::class, 'destroy'])->name('spots.de
 // Eliminar todos los spots (DELETE)
 Route::delete('/spots-all', [SpotController::class, 'deleteAll'])->name('spots.deleteAll');
 
-// ========================================
-// RUTAS DE REGISTRO (CSV)
-// ========================================
-
 // Formulario de registro
 Route::get('/registro', function () {
     return view('registro');
@@ -44,7 +36,7 @@ Route::get('/registro', function () {
 // Guardar usuario en CSV
 Route::post('/guardar-csv', [CsvController::class, 'guardar'])->name('guardar.csv');
 
-
+// Dashboard 
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -55,6 +47,7 @@ Route::middleware([
     })->name('dashboard');
 });
 
+// Vista de bienvenida AdminLTE
 Route::get('/adminlte/bienvenida', function () {
     return view('adminlte.bienvenida');
 })->middleware('auth')->name('adminlte.bienvenida');
