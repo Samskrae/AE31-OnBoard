@@ -315,6 +315,22 @@ return [
             'url'  => 'adminlte/crear-usuario',
             'icon' => 'fas fa-fw fa-user-plus',
         ],
+        [
+            'text' => 'Gestión de Usuarios',
+            'icon' => 'fas fa-users',
+            'submenu' => [
+                [
+                    'text' => 'Listado de Usuarios',
+                    'route'  => 'admin.users.index', // Apunta a /admin/users (get)
+                    'icon' => 'fas fa-list',
+                ],
+                [
+                    'text' => 'Nuevo Usuario',
+                    'route'  => 'admin.users.create', // Apunta a /admin/users/create (get)
+                    'icon' => 'fas fa-plus-circle',
+                ],
+            ],
+        ],
 
 
 
