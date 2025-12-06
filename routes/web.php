@@ -3,10 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SpotController;
 use App\Http\Controllers\CsvController;
-
-/**
- * Rutas principales de la aplicación OnBoard
- */
+use App\Http\Controllers\Admin\UserController; // (para el CRUD)
 
 // Página de inicio
 Route::get('/', function () {
@@ -73,3 +70,30 @@ Route::post('/adminlte/crear-usuario', function () {
 
     return redirect()->back()->with('message', 'Usuario creado correctamente');
 })->middleware('auth')->name('adminlte.usuario.store');
+
+
+
+
+// Rutas de Administración 
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+    // 1. Mostrar Listado
+    Route::get('users', [UserController::class, 'index'])->name('admin.users.index');
+
+    // 2. Mostrar Formulario Creación
+    Route::get('users/create', [UserController::class, 'create'])->name('admin.users.create');
+
+    // 3. Almacenar Nuevo Usuario
+    Route::post('users', [UserController::class, 'store'])->name('admin.users.store');
+
+    // 4. Mostrar Detalle
+    Route::get('users/{user}', [UserController::class, 'show'])->name('admin.users.show');
+
+    // 5. Mostrar Formulario Edición
+    Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('admin.users.edit');
+
+    // 6. Actualizar Usuario 
+    Route::put('users/{user}', [UserController::class, 'update'])->name('admin.users.update');
+
+    // 7. Eliminar Usuario
+    Route::delete('users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
+});
