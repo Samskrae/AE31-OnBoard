@@ -1,0 +1,328 @@
+{
+  "info": {
+    "_postman_id": "api-v1-onboard",
+    "name": "API v1 - OnBoard",
+    "description": "Colección de endpoints para la API v1 del proyecto OnBoard",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Spots",
+      "item": [
+        {
+          "name": "GET - Listar todos los spots",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response is an array', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('data');",
+                  "    pm.expect(Array.isArray(jsonData.data)).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/spots",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "spots"]
+            }
+          }
+        },
+        {
+          "name": "GET - Obtener un spot por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response has required fields', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data).to.have.property('id');",
+                  "    pm.expect(jsonData.data).to.have.property('name');",
+                  "    pm.expect(jsonData.data).to.have.property('latitude');",
+                  "    pm.expect(jsonData.data).to.have.property('longitude');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/spots/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "spots", "1"]
+            }
+          }
+        },
+        {
+          "name": "POST - Crear un nuevo spot",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test('Response has created spot', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data).to.have.property('id');",
+                  "    pm.expect(jsonData.data.name).to.equal('Penyagolosa');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Penyagolosa\",\n  \"lat\": 40.3500,\n  \"lon\": -0.5000,\n  \"descripcion\": \"Formaciones calcáreas con excelentes rutas de escalada\",\n  \"nivel\": \"intermediate\",\n  \"imagen\": \"https://example.com/penyagolosa.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/spots",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "spots"]
+            }
+          }
+        },
+        {
+          "name": "PUT - Actualizar un spot (todas las propiedades)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Spot was updated', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.level).to.equal('advanced');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Penyagolosa Updated\",\n  \"lat\": 40.3500,\n  \"lon\": -0.5000,\n  \"descripcion\": \"Formaciones calcáreas actualizadas\",\n  \"nivel\": \"advanced\",\n  \"imagen\": \"https://example.com/penyagolosa-updated.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/spots/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "spots", "1"]
+            }
+          }
+        },
+        {
+          "name": "PATCH - Actualizar parcialmente un spot",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Only level field was updated', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.level).to.equal('expert');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nivel\": \"expert\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/spots/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "spots", "1"]
+            }
+          }
+        },
+        {
+          "name": "DELETE - Eliminar un spot",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 204', function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/spots/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "spots", "1"]
+            }
+          }
+        },
+        {
+          "name": "POST - Test validación (nivel inválido)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 422', function () {",
+                  "    pm.response.to.have.status(422);",
+                  "});",
+                  "pm.test('Response contains validation errors', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('errors');",
+                  "    pm.expect(jsonData.errors).to.have.property('nivel');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Test Spot\",\n  \"lat\": 41.0,\n  \"lon\": 1.0,\n  \"descripcion\": \"Test description\",\n  \"nivel\": \"invalid_level\",\n  \"imagen\": \"https://example.com/test.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/spots",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "spots"]
+            }
+          }
+        },
+        {
+          "name": "POST - Test validación (campo requerido faltante)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 422', function () {",
+                  "    pm.response.to.have.status(422);",
+                  "});",
+                  "pm.test('Response contains validation errors for nombre', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.errors).to.have.property('nombre');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"lat\": 41.0,\n  \"lon\": 1.0,\n  \"descripcion\": \"Test description\",\n  \"nivel\": \"beginner\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/spots",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "spots"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    }
+  ]
+}
