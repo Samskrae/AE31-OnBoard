@@ -143,4 +143,108 @@ class CsvController extends Controller
         
         return trim($input);
     }
+
+    // API Methods
+
+    /**
+     * API: Listar todos los registros (JSON)
+     */
+    public function apiIndex()
+    {
+        $registros = Registro::all();
+        return response()->json($registros);
+    }
+
+    /**
+     * API: Mostrar un registro específico (JSON)
+     */
+    public function apiShow($id)
+    {
+        $registro = Registro::find($id);
+        if (!$registro) {
+            return response()->json(['error' => 'Registro not found'], 404);
+        }
+        return response()->json($registro);
+    }
+
+    /**
+     * API: Crear nuevo registro (JSON)
+     */
+    public function apiStore(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|min:3|max:100',
+                'email' => 'required|email|max:255',
+                'password' => 'required|string|min:6|max:255',
+                'date_of_birth' => 'required|date|before_or_equal:today',
+                'bio' => 'nullable|string|max:500'
+            ]);
+
+            $registro = Registro::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => bcrypt($validated['password']),
+                'date_of_birth' => $validated['date_of_birth'],
+                'bio' => $validated['bio'] ?? null,
+            ]);
+
+            return response()->json($registro, 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error creating registro: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * API: Actualizar registro (JSON)
+     */
+    public function apiUpdate(Request $request, $id)
+    {
+        $registro = Registro::find($id);
+        if (!$registro) {
+            return response()->json(['error' => 'Registro not found'], 404);
+        }
+
+        try {
+            $validated = $request->validate([
+                'name' => 'sometimes|required|string|min:3|max:100',
+                'email' => 'sometimes|required|email|max:255',
+                'password' => 'sometimes|required|string|min:6|max:255',
+                'date_of_birth' => 'sometimes|required|date|before_or_equal:today',
+                'bio' => 'sometimes|nullable|string|max:500'
+            ]);
+
+            if (isset($validated['password'])) {
+                $validated['password'] = bcrypt($validated['password']);
+            }
+
+            $registro->update($validated);
+
+            return response()->json($registro);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error updating registro: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * API: Eliminar registro (JSON)
+     */
+    public function apiDestroy($id)
+    {
+        $registro = Registro::find($id);
+        if (!$registro) {
+            return response()->json(['error' => 'Registro not found'], 404);
+        }
+
+        try {
+            $registro->delete();
+            return response()->json(['message' => 'Registro deleted successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error deleting registro: ' . $e->getMessage()], 500);
+        }
+    }
 }

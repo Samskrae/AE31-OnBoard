@@ -286,4 +286,128 @@ class SpotController extends Controller
     {
         return htmlspecialchars($input, ENT_QUOTES, 'UTF-8');
     }
+
+    // API Methods
+
+    /**
+     * API: Listar todos los spots (JSON)
+     */
+    public function apiIndex()
+    {
+        $spots = Spot::all();
+        return response()->json($spots);
+    }
+
+    /**
+     * API: Mostrar un spot específico (JSON)
+     */
+    public function apiShow($id)
+    {
+        $spot = Spot::find($id);
+        if (!$spot) {
+            return response()->json(['error' => 'Spot not found'], 404);
+        }
+        return response()->json($spot);
+    }
+
+    /**
+     * API: Crear nuevo spot (JSON)
+     */
+    public function apiStore(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'nombre' => 'required|string|min:3|max:100',
+                'lat' => 'required|numeric|between:-90,90',
+                'lon' => 'required|numeric|between:-180,180',
+                'descripcion' => 'required|string|min:10|max:500',
+                'nivel' => 'required|string|in:Principiante,Intermedio,Avanzado',
+                'imagen' => 'nullable|image|mimes:jpeg,png,gif,webp,avif|max:2048'
+            ]);
+
+            $imagenPath = null;
+            if ($request->hasFile('imagen')) {
+                $nombreArchivo = time() . '_' . uniqid() . '.' . $request->file('imagen')->getClientOriginalExtension();
+                $imagenPath = $request->file('imagen')->storeAs('spots', $nombreArchivo, 'public');
+            }
+
+            $spot = Spot::create([
+                'nombre' => $validated['nombre'],
+                'lat' => $validated['lat'],
+                'lon' => $validated['lon'],
+                'descripcion' => $validated['descripcion'],
+                'nivel' => $validated['nivel'],
+                'imagen' => $imagenPath,
+            ]);
+
+            return response()->json($spot, 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error creating spot: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * API: Actualizar spot (JSON)
+     */
+    public function apiUpdate(Request $request, $id)
+    {
+        $spot = Spot::find($id);
+        if (!$spot) {
+            return response()->json(['error' => 'Spot not found'], 404);
+        }
+
+        try {
+            $validated = $request->validate([
+                'nombre' => 'sometimes|required|string|min:3|max:100',
+                'lat' => 'sometimes|required|numeric|between:-90,90',
+                'lon' => 'sometimes|required|numeric|between:-180,180',
+                'descripcion' => 'sometimes|required|string|min:10|max:500',
+                'nivel' => 'sometimes|required|string|in:Principiante,Intermedio,Avanzado',
+                'imagen' => 'nullable|image|mimes:jpeg,png,gif,webp,avif|max:2048'
+            ]);
+
+            if ($request->hasFile('imagen')) {
+                // Delete old image if exists
+                if ($spot->imagen) {
+                    Storage::disk('public')->delete($spot->imagen);
+                }
+                $nombreArchivo = time() . '_' . uniqid() . '.' . $request->file('imagen')->getClientOriginalExtension();
+                $validated['imagen'] = $request->file('imagen')->storeAs('spots', $nombreArchivo, 'public');
+            }
+
+            $spot->update($validated);
+
+            return response()->json($spot);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error updating spot: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * API: Eliminar spot (JSON)
+     */
+    public function apiDestroy($id)
+    {
+        $spot = Spot::find($id);
+        if (!$spot) {
+            return response()->json(['error' => 'Spot not found'], 404);
+        }
+
+        try {
+            // Delete image if exists
+            if ($spot->imagen) {
+                Storage::disk('public')->delete($spot->imagen);
+            }
+
+            $spot->delete();
+
+            return response()->json(['message' => 'Spot deleted successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error deleting spot: ' . $e->getMessage()], 500);
+        }
+    }
 }
