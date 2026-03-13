@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -47,4 +47,3 @@ Route::post('/registros', [CsvController::class, 'apiStore']);
 Route::get('/registros/{id}', [CsvController::class, 'apiShow']);
 Route::put('/registros/{id}', [CsvController::class, 'apiUpdate']);
 Route::delete('/registros/{id}', [CsvController::class, 'apiDestroy']);
->>>>>>> Stashed changes
