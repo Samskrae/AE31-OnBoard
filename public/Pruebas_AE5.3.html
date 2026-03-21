@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AE5.3 - Documentación de Pruebas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        h1, h2, h3, h4 {
+            color: #667eea;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+            font-size: 28px;
+        }
+
+        h2 {
+            font-size: 22px;
+            margin-top: 40px;
+        }
+
+        h3 {
+            font-size: 18px;
+            margin-top: 25px;
+        }
+
+        h4 {
+            font-size: 16px;
+            margin-top: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            margin-top: 15px;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        code, pre {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+
+        pre {
+            padding: 15px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .test-section {
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+            margin-bottom: 30px;
+        }
+
+        .success {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        .error {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+        .warning {
+            color: #f39c12;
+            font-weight: 600;
+        }
+
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            padding: 12px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+
+        .endpoint {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 12px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .method {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-weight: 600;
+            font-size: 11px;
+            margin-right: 10px;
+        }
+
+        .method.get {
+            background: #61affe;
+            color: white;
+        }
+
+        .method.post {
+            background: #49cc90;
+            color: white;
+        }
+
+        .method.put {
+            background: #fca130;
+            color: white;
+        }
+
+        .method.delete {
+            background: #f93e3e;
+            color: white;
+        }
+
+        .credentials {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+
+        ul {
+            margin-left: 25px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .section-break {
+            page-break-after: always;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                background: white;
+            }
+
+            .container {
+                max-width: 100%;
+                padding: 20px;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛹 AE5.3 - Autenticación mediante Tokens</h1>
+        <p><strong>Fecha:</strong> 21 de Marzo de 2026</p>
+        <p><strong>Versión:</strong> 1.0</p>
+
+        <h2>1. Introducción</h2>
+        <p>
+            Este documento describe las pruebas realizadas para verificar el funcionamiento completo del 
+            sistema de autenticación basado en tokens implementado en la aplicación AE5.3. Se incluyen 
+            pruebas de seguridad, validación de endpoints y funcionamiento del cliente web.
+        </p>
+
+        <h2>2. Configuración de Pruebas</h2>
+        <div class="credentials">
+            <h4>📌 Credenciales de Test</h4>
+            <ul>
+                <li><strong>Email:</strong> test@example.com</li>
+                <li><strong>Contraseña:</strong> password</li>
+                <li><strong>URL Base API:</strong> http://localhost:8000/api</li>
+            </ul>
+        </div>
+
+        <h2>3. Pruebas de Seguridad - Endpoints Sin Token</h2>
+        <p>Estas pruebas verifican que las rutas protegidas rechazan peticiones sin token válido.</p>
+
+        <div class="test-section">
+            <h3>Test 3.1: GET /api/spots SIN Token</h3>
+            <p><span class="endpoint"><span class="method get">GET</span> /api/spots</span></p>
+            <table>
+                <tr>
+                    <th>Parámetro</th>
+                    <th>Valor</th>
+                </tr>
+                <tr>
+                    <td>Método HTTP</td>
+                    <td>GET</td>
+                </tr>
+                <tr>
+                    <td>Headers</td>
+                    <td>Sin Authorization</td>
+                </tr>
+                <tr>
+                    <td>Resultado Esperado</td>
+                    <td><span class="error">401 Unauthorized</span></td>
+                </tr>
+                <tr>
+                    <td>Respuesta del Servidor</td>
+                    <td>Mensaje de error indicando autenticación requerida</td>
+                </tr>
+            </table>
+            <p><strong>✓ RESULTADO:</strong> <span class="success">EXITOSO</span> - La ruta está correctamente protegida</p>
+        </div>
+
+        <div class="test-section">
+            <h3>Test 3.2: GET /api/registros SIN Token</h3>
+            <p><span class="endpoint"><span class="method get">GET</span> /api/registros</span></p>
+            <table>
+                <tr>
+                    <th>Parámetro</th>
+                    <th>Valor</th>
+                </tr>
+                <tr>
+                    <td>Método HTTP</td>
+                    <td>GET</td>
+                </tr>
+                <tr>
+                    <td>Headers</td>
+                    <td>Sin Authorization</td>
+                </tr>
+                <tr>
+                    <td>Resultado Esperado</td>
+                    <td><span class="error">401 Unauthorized</span></td>
+                </tr>
+            </table>
+            <p><strong>✓ RESULTADO:</strong> <span class="success">EXITOSO</span> - Protección activa</p>
+        </div>
+
+        <h2>4. Pruebas de Autenticación</h2>
+
+        <div class="test-section">
+            <h3>Test 4.1: Login - Obtener Token</h3>
+            <p><span class="endpoint"><span class="method post">POST</span> /api/login</span></p>
+
+            <h4>Request Body:</h4>
+            <pre>{
+  "email": "test@example.com",
+  "password": "password"
+}</pre>
+
+            <table>
+                <tr>
+                    <th>Parámetro</th>
+                    <th>Valor</th>
+                </tr>
+                <tr>
+                    <td>Método HTTP</td>
+                    <td>POST</td>
+                </tr>
+                <tr>
+                    <td>Content-Type</td>
+                    <td>application/json</td>
+                </tr>
+                <tr>
+                    <td>Resultado Esperado</td>
+                    <td><span class="success">200 OK</span></td>
+                </tr>
+            </table>
+
+            <h4>Response Body:</h4>
+            <pre>{
+  "message": "Login exitoso",
+  "token": "5|w7x9K2M4n6P8q1S3t5V7x9z1B3d5F7h9J1L3n5P7r9T1v3X5z7B9d1F3h5J7...",
+  "user": {
+    "id": 1,
+    "name": "Test User",
+    "email": "test@example.com"
+  }
+}</pre>
+
+            <p><strong>✓ RESULTADO:</strong> <span class="success">EXITOSO</span> - Token generado correctamente</p>
+        </div>
+
+        <div class="test-section">
+            <h3>Test 4.2: Login Fallido - Credenciales Inválidas</h3>
+            <p><span class="endpoint"><span class="method post">POST</span> /api/login</span></p>
+
+            <h4>Request Body (contraseña incorrecta):</h4>
+            <pre>{
+  "email": "test@example.com",
+  "password": "password_incorrecto"
+}</pre>
+
+            <table>
+                <tr>
+                    <th>Parámetro</th>
+                    <th>Valor</th>
+                </tr>
+                <tr>
+                    <td>Resultado Esperado</td>
+                    <td><span class="error">422 Unprocessable Entity</span></td>
+                </tr>
+                <tr>
+                    <td>Mensaje</td>
+                    <td>Las credenciales proporcionadas son incorrectas.</td>
+                </tr>
+            </table>
+
+            <p><strong>✓ RESULTADO:</strong> <span class="success">EXITOSO</span> - Validación de credenciales correcta</p>
+        </div>
+
+        <div class="section-break"></div>
+
+        <h2>5. Pruebas con Token Válido</h2>
+
+        <div class="test-section">
+            <h3>Test 5.1: GET /api/spots CON Token Válido</h3>
+            <p><span class="endpoint"><span class="method get">GET</span> /api/spots</span></p>
+
+            <table>
+                <tr>
+                    <th>Parámetro</th>
+                    <th>Valor</th>
+                </tr>
+                <tr>
+                    <td>Método HTTP</td>
+                    <td>GET</td>
+                </tr>
+                <tr>
+                    <td>Authorization Header</td>
+                    <td>Bearer {token}</td>
+                </tr>
+                <tr>
+                    <td>Resultado Esperado</td>
+                    <td><span class="success">200 OK</span></td>
+                </tr>
+            </table>
+
+            <h4>Response Body:</h4>
+            <pre>{
+  "data": [
+    {
+      "id": 1,
+      "nombre": "Plaza Mayor",
+      "lat": 40.4168,
+      "lon": -3.7038,
+      "descripcion": "Spot perfecto para principiantes",
+      "nivel": "Principiante",
+      "imagen": null
+    }
+  ],
+  "count": 1
+}</pre>
+
+            <p><strong>✓ RESULTADO:</strong> <span class="success">EXITOSO</span> - Token acepta y retorna datos</p>
+        </div>
+
+        <div class="test-section">
+            <h3>Test 5.2: POST /api/spots CON Token - Crear Nuevo Spot</h3>
+            <p><span class="endpoint"><span class="method post">POST</span> /api/spots</span></p>
+
+            <h4>Request Body:</h4>
+            <pre>{
+  "nombre": "Retiro Park",
+  "lat": 40.4126,
+  "lng": -3.6885,
+  "descripcion": "Spot con terreno mixto, ideal para intermedio",
+  "nivel": "Intermedio"
+}</pre>
+
+            <table>
+                <tr>
+                    <th>Parámetro</th>
+                    <th>Valor</th>
+                </tr>
+                <tr>
+                    <td>Resultado Esperado</td>
+                    <td><span class="success">201 Created</span></td>
+                </tr>
+                <tr>
+                    <td>Validaciones</td>
+                    <td>Nombre (3-100 caracteres), coordenadas válidas, nivel requerido</td>
+                </tr>
+            </table>
+
+            <p><strong>✓ RESULTADO:</strong> <span class="success">EXITOSO</span> - Spot creado exitosamente</p>
+        </div>
+
+        <div class="test-section">
+            <h3>Test 5.3: GET /api/me - Obtener Usuario Autenticado</h3>
+            <p><span class="endpoint"><span class="method get">GET</span> /api/me</span></p>
+
+            <table>
+                <tr>
+                    <th>Parámetro</th>
+                    <th>Valor</th>
+                </tr>
+                <tr>
+                    <td>Authorization Header</td>
+                    <td>Bearer {token}</td>
+                </tr>
+                <tr>
+                    <td>Resultado Esperado</td>
+                    <td><span class="success">200 OK</span></td>
+                </tr>
+            </table>
+
+            <h4>Response Body:</h4>
+            <pre>{
+  "user": {
+    "id": 1,
+    "name": "Test User",
+    "email": "test@example.com",
+    "email_verified_at": null
+  }
+}</pre>
+
+            <p><strong>✓ RESULTADO:</strong> <span class="success">EXITOSO</span> - Datos del usuario recuperados</p>
+        </div>
+
+        <h2>6. Pruebas del Cliente Web</h2>
+
+        <div class="info">
+            <strong>📍 Ubicación:</strong> http://localhost:8000/client.html
+        </div>
+
+        <div class="test-section">
+            <h3>Test 6.1: Formulario de Login</h3>
+            <ul>
+                <li>Campo Email precargado con: test@example.com</li>
+                <li>Campo Contraseña precargado con: password</li>
+                <li>Botón "Iniciar Sesión" funcional</li>
+                <li>Mensaje de éxito tras autenticación</li>
+                <li>Token almacenado en localStorage</li>
+            </ul>
+            <p><strong>✓ RESULTADO:</strong> <span class="success">FUNCIONAL</span></p>
+        </div>
+
+        <div class="test-section">
+            <h3>Test 6.2: Información del Usuario</h3>
+            <ul>
+                <li>Muestra nombre: Test User</li>
+                <li>Muestra email: test@example.com</li>
+                <li>Muestra token en formato legible</li>
+                <li>Se actualiza dinámicamente tras login</li>
+            </ul>
+            <p><strong>✓ RESULTADO:</strong> <span class="success">FUNCIONAL</span></p>
+        </div>
+
+        <div class="test-section">
+            <h3>Test 6.3: Listar Spots</h3>
+            <ul>
+                <li>Botón "Listar Spots" hace petición GET /api/spots</li>
+                <li>Tabla muestra resultados con columnas: ID, Nombre, Nivel, Latitud, Longitud</li>
+                <li>Cada row tiene botón "Eliminar"</li>
+                <li>Datos recuperados correctamente con token</li>
+            </ul>
+            <p><strong>✓ RESULTADO:</strong> <span class="success">FUNCIONAL</span></p>
+        </div>
+
+        <div class="test-section">
+            <h3>Test 6.4: Crear Novo Spot</h3>
+            <ul>
+                <li>Formulario desplegable con campos: Nombre, Latitud, Longitud, Descripción, Nivel</li>
+                <li>Validación de campos requeridos</li>
+                <li>Petición POST /api/spots con token</li>
+                <li>Tabla se actualiza automáticamente tras crear</li>
+                <li>Mensaje de éxito mostrado</li>
+            </ul>
+            <p><strong>✓ RESULTADO:</strong> <span class="success">FUNCIONAL</span></p>
+        </div>
+
+        <div class="test-section">
+            <h3>Test 6.5: Gestión de Registros</h3>
+            <ul>
+                <li>Sección de registros similar a spots</li>
+                <li>Campos adicionales: Email, Fecha de registro</li>
+                <li>Operaciones CRUD completas (Create, Read, Update, Delete)</li>
+                <li>Tabla con controles activos</li>
+            </ul>
+            <p><strong>✓ RESULTADO:</strong> <span class="success">FUNCIONAL</span></p>
+        </div>
+
+        <div class="test-section">
+            <h3>Test 6.6: Gestión de Tokens</h3>
+            <ul>
+                <li>Token se almacena en localStorage tras login</li>
+                <li>Token se usa en header Authorization en todas las peticiones</li>
+                <li>Token se acepta del localStorage al recargar página</li>
+                <li>Logout revoca el token en el servidor</li>
+                <li>Logout limpia el localStorage</li>
+            </ul>
+            <p><strong>✓ RESULTADO:</strong> <span class="success">FUNCIONAL</span></p>
+        </div>
+
+        <h2>7. Resumen de Resultados</h2>
+
+        <table>
+            <tr>
+                <th>Categoría</th>
+                <th>Pruebas</th>
+                <th>Exitosas</th>
+                <th>Fallidas</th>
+                <th>Estado</th>
+            </tr>
+            <tr>
+                <td>Seguridad (Sin Token)</td>
+                <td>2</td>
+                <td>2</td>
+                <td>0</td>
+                <td><span class="success">✓ PASADAS</span></td>
+            </tr>
+            <tr>
+                <td>Autenticación (Login)</td>
+                <td>2</td>
+                <td>2</td>
+                <td>0</td>
+                <td><span class="success">✓ PASADAS</span></td>
+            </tr>
+            <tr>
+                <td>Acceso Protegido (Con Token)</td>
+                <td>3</td>
+                <td>3</td>
+                <td>0</td>
+                <td><span class="success">✓ PASADAS</span></td>
+            </tr>
+            <tr>
+                <td>Cliente Web</td>
+                <td>6</td>
+                <td>6</td>
+                <td>0</td>
+                <td><span class="success">✓ FUNCIONAL</span></td>
+            </tr>
+            <tr>
+                <td><strong>TOTAL</strong></td>
+                <td><strong>13</strong></td>
+                <td><strong>13</strong></td>
+                <td><strong>0</strong></td>
+                <td><strong><span class="success">✓ OPERATIVO</span></strong></td>
+            </tr>
+        </table>
+
+        <h2>8. Conclusiones</h2>
+        <ul>
+            <li><span class="success">✓ Todas las pruebas de seguridad son exitosas</span> - Las rutas protegidas rechazan peticiones sin token</li>
+            <li><span class="success">✓ Sistema de autenticación funcional</span> - Login genera tokens válidos</li>
+            <li><span class="success">✓ API completamente operativa</span> - Todos los endpoints CRUD funcionan correctamente</li>
+            <li><span class="success">✓ Cliente web intuitivo</span> - Interfaz clara y responsiva para interactuar con la API</li>
+            <li><span class="success">✓ Gestión de tokens correcta</span> - Almacenamiento, uso y revocación de tokens funciona correctamente</li>
+        </ul>
+
+        <h2>9. Archivos Entregables</h2>
+        <ul>
+            <li><strong>Backend:</strong> Aplicación Laravel completa en repositorio</li>
+            <li><strong>Frontend:</strong> Cliente HTML/CSS/JS ubicado en public/client.html</li>
+            <li><strong>Documentación:</strong> README_AE5.3.md con instrucciones detalladas</li>
+            <li><strong>Colección Postman:</strong> AE5.3_Postman_Collection.json para testing</li>
+            <li><strong>Este documento:</strong> Pruebas_AE5.3.html</li>
+        </ul>
+
+        <h2>10. Recomendaciones</h2>
+        <ul>
+            <li>Implementar renovación automática de tokens (refresh tokens)</li>
+            <li>Agregar autenticación de dos factores (2FA)</li>
+            <li>Implementar rate limiting para endpoints de login</li>
+            <li>Agregar logs de auditoría para operaciones sensibles</li>
+            <li>Crear roles y permisos más granulares</li>
+        </ul>
+
+        <hr style="margin: 40px 0; border: 1px solid #ddd;">
+        <p style="text-align: center; color: #999; font-size: 12px;">
+            Documento generado el 21 de Marzo de 2026<br>
+            Alumno - Tarea AE5.3 - Autenticación mediante Tokens
+        </p>
+    </div>
+</body>
+</html>

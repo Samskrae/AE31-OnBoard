@@ -286,4 +286,195 @@ class SpotController extends Controller
     {
         return htmlspecialchars($input, ENT_QUOTES, 'UTF-8');
     }
+
+    // ===================== API METHODS =====================
+
+    /**
+     * API - Listar todos los spots
+     */
+    public function apiIndex()
+    {
+        try {
+            $spots = Spot::all();
+            return response()->json([
+                'data' => $spots,
+                'count' => $spots->count()
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error al listar spots: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * API - Ver un spot específico
+     */
+    public function apiShow($id)
+    {
+        try {
+            $spot = Spot::findOrFail($id);
+            return response()->json($spot, 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'error' => 'Spot no encontrado'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * API - Crear un nuevo spot
+     */
+    public function apiStore(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'nombre' => [
+                    'required',
+                    'string',
+                    'min:3',
+                    'max:100',
+                    'regex:/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\-\.]+$/'
+                ],
+                'lat' => [
+                    'required',
+                    'numeric',
+                    'between:-90,90'
+                ],
+                'lng' => [
+                    'required',
+                    'numeric',
+                    'between:-180,180'
+                ],
+                'descripcion' => [
+                    'required',
+                    'string',
+                    'min:10',
+                    'max:500'
+                ],
+                'nivel' => [
+                    'required',
+                    'string',
+                    'in:Principiante,Intermedio,Avanzado'
+                ]
+            ]);
+
+            $spot = Spot::create([
+                'nombre' => $validated['nombre'],
+                'lat' => $validated['lat'],
+                'lon' => $validated['lng'],
+                'descripcion' => $validated['descripcion'],
+                'nivel' => $validated['nivel']
+            ]);
+
+            return response()->json([
+                'message' => 'Spot creado exitosamente',
+                'data' => $spot
+            ], 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'error' => 'Validación fallida',
+                'messages' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * API - Actualizar un spot
+     */
+    public function apiUpdate(Request $request, $id)
+    {
+        try {
+            $spot = Spot::findOrFail($id);
+
+            $validated = $request->validate([
+                'nombre' => [
+                    'sometimes',
+                    'string',
+                    'min:3',
+                    'max:100',
+                    'regex:/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\-\.]+$/'
+                ],
+                'lat' => [
+                    'sometimes',
+                    'numeric',
+                    'between:-90,90'
+                ],
+                'lng' => [
+                    'sometimes',
+                    'numeric',
+                    'between:-180,180'
+                ],
+                'descripcion' => [
+                    'sometimes',
+                    'string',
+                    'min:10',
+                    'max:500'
+                ],
+                'nivel' => [
+                    'sometimes',
+                    'string',
+                    'in:Principiante,Intermedio,Avanzado'
+                ]
+            ]);
+
+            // Actualizar solo los campos proporcionados
+            if (isset($validated['nombre'])) $spot->nombre = $validated['nombre'];
+            if (isset($validated['lat'])) $spot->lat = $validated['lat'];
+            if (isset($validated['lng'])) $spot->lon = $validated['lng'];
+            if (isset($validated['descripcion'])) $spot->descripcion = $validated['descripcion'];
+            if (isset($validated['nivel'])) $spot->nivel = $validated['nivel'];
+
+            $spot->save();
+
+            return response()->json([
+                'message' => 'Spot actualizado exitosamente',
+                'data' => $spot
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'error' => 'Spot no encontrado'
+            ], 404);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'error' => 'Validación fallida',
+                'messages' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * API - Eliminar un spot
+     */
+    public function apiDestroy($id)
+    {
+        try {
+            $spot = Spot::findOrFail($id);
+            $spot->delete();
+
+            return response()->json([
+                'message' => 'Spot eliminado exitosamente'
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'error' => 'Spot no encontrado'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

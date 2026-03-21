@@ -143,4 +143,207 @@ class CsvController extends Controller
         
         return trim($input);
     }
+
+    // ===================== API METHODS =====================
+
+    /**
+     * API - Listar todos los registros
+     */
+    public function apiIndex()
+    {
+        try {
+            $registros = Registro::select('id', 'name', 'email', 'date_of_birth as fecha', 'bio')
+                ->get();
+            return response()->json([
+                'data' => $registros,
+                'count' => $registros->count()
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error al listar registros: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * API - Ver un registro específico
+     */
+    public function apiShow($id)
+    {
+        try {
+            $registro = Registro::select('id', 'name', 'email', 'date_of_birth as fecha', 'bio')
+                ->findOrFail($id);
+            return response()->json($registro, 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'error' => 'Registro no encontrado'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * API - Crear un nuevo registro
+     */
+    public function apiStore(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'name' => [
+                    'required',
+                    'string',
+                    'min:3',
+                    'max:100',
+                    'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/'
+                ],
+                'email' => [
+                    'required',
+                    'email',
+                    'unique:registros,email',
+                    'max:255'
+                ],
+                'password' => [
+                    'required',
+                    'string',
+                    'min:6',
+                    'max:255'
+                ],
+                'fecha' => [
+                    'required',
+                    'date',
+                    'before_or_equal:' . date('Y-m-d')
+                ],
+                'biografia' => [
+                    'nullable',
+                    'string',
+                    'max:500'
+                ]
+            ]);
+
+            $registro = Registro::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => bcrypt($validated['password']),
+                'date_of_birth' => $validated['fecha'],
+                'bio' => $validated['biografia'] ?? null
+            ]);
+
+            return response()->json([
+                'message' => 'Registro creado exitosamente',
+                'data' => [
+                    'id' => $registro->id,
+                    'name' => $registro->name,
+                    'email' => $registro->email,
+                    'fecha' => $registro->date_of_birth
+                ]
+            ], 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'error' => 'Validación fallida',
+                'messages' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * API - Actualizar un registro
+     */
+    public function apiUpdate(Request $request, $id)
+    {
+        try {
+            $registro = Registro::findOrFail($id);
+
+            $validated = $request->validate([
+                'name' => [
+                    'sometimes',
+                    'string',
+                    'min:3',
+                    'max:100',
+                    'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/'
+                ],
+                'email' => [
+                    'sometimes',
+                    'email',
+                    'unique:registros,email,' . $id,
+                    'max:255'
+                ],
+                'password' => [
+                    'sometimes',
+                    'string',
+                    'min:6',
+                    'max:255'
+                ],
+                'fecha' => [
+                    'sometimes',
+                    'date',
+                    'before_or_equal:' . date('Y-m-d')
+                ],
+                'biografia' => [
+                    'nullable',
+                    'string',
+                    'max:500'
+                ]
+            ]);
+
+            if (isset($validated['name'])) $registro->name = $validated['name'];
+            if (isset($validated['email'])) $registro->email = $validated['email'];
+            if (isset($validated['password'])) $registro->password = bcrypt($validated['password']);
+            if (isset($validated['fecha'])) $registro->date_of_birth = $validated['fecha'];
+            if (isset($validated['biografia'])) $registro->bio = $validated['biografia'];
+
+            $registro->save();
+
+            return response()->json([
+                'message' => 'Registro actualizado exitosamente',
+                'data' => [
+                    'id' => $registro->id,
+                    'name' => $registro->name,
+                    'email' => $registro->email
+                ]
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'error' => 'Registro no encontrado'
+            ], 404);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'error' => 'Validación fallida',
+                'messages' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * API - Eliminar un registro
+     */
+    public function apiDestroy($id)
+    {
+        try {
+            $registro = Registro::findOrFail($id);
+            $registro->delete();
+
+            return response()->json([
+                'message' => 'Registro eliminado exitosamente'
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'error' => 'Registro no encontrado'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

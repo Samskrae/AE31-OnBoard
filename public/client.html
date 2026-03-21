@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AE5.3 - Cliente Autenticado</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .auth-section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .auth-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input[type="email"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #5568d3;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        button.logout, button.delete {
+            background: #e74c3c;
+        }
+
+        button.logout:hover, button.delete:hover {
+            background: #c0392b;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            display: block;
+        }
+
+        .user-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .user-info.show {
+            display: block;
+        }
+
+        .user-info h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .user-info p {
+            color: #666;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .token-info {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            word-break: break-all;
+            margin-bottom: 10px;
+        }
+
+        .api-section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .api-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .api-section.hidden {
+            display: none;
+        }
+
+        .operations {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .operations button {
+            margin: 0;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .data-table thead {
+            background: #f8f9fa;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        .data-table th {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .data-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .data-table .actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .data-table button {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        .no-data {
+            color: #999;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .footer {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            color: #666;
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .operations {
+                grid-template-columns: 1fr;
+            }
+
+            .data-table {
+                font-size: 12px;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛹 AE5.3 - Cliente con Autenticación por Tokens</h1>
+            <p>Autenticación segura con Laravel Sanctum - Prueba la API protegida</p>
+        </header>
+
+        <!-- Sección de Autenticación -->
+        <div class="auth-section">
+            <h2>🔐 Autenticación</h2>
+            
+            <div id="authStatus" class="status"></div>
+            <div id="userInfo" class="user-info"></div>
+
+            <div id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" placeholder="test@example.com" value="test@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña:</label>
+                    <input type="password" id="password" placeholder="password" value="password">
+                </div>
+                <button onclick="login()">Iniciar Sesión</button>
+            </div>
+
+            <div id="logoutForm" style="display: none;">
+                <button class="logout" onclick="logout()">Cerrar Sesión</button>
+            </div>
+        </div>
+
+        <!-- Sección de API - Spots -->
+        <div id="spotsSection" class="api-section hidden">
+            <h2>🛹 Gestión de Spots</h2>
+            
+            <div class="operations">
+                <button onclick="listSpots()">Listar Spots</button>
+                <button onclick="showCreateSpotForm()">Crear Spot</button>
+            </div>
+
+            <div id="createSpotForm" style="display: none; border: 1px solid #ddd; padding: 20px; border-radius: 4px; margin-bottom: 20px;">
+                <h3>Crear Nuevo Spot</h3>
+                <div class="form-group">
+                    <label for="spotNombre">Nombre:</label>
+                    <input type="text" id="spotNombre" placeholder="Nombre del spot">
+                </div>
+                <div class="form-group">
+                    <label for="spotLat">Latitud:</label>
+                    <input type="number" id="spotLat" placeholder="0" step="0.0001">
+                </div>
+                <div class="form-group">
+                    <label for="spotLng">Longitud:</label>
+                    <input type="number" id="spotLng" placeholder="0" step="0.0001">
+                </div>
+                <div class="form-group">
+                    <label for="spotDesc">Descripción:</label>
+                    <input type="text" id="spotDesc" placeholder="Descripción del spot">
+                </div>
+                <div class="form-group">
+                    <label for="spotNivel">Nivel:</label>
+                    <select id="spotNivel">
+                        <option value="">Seleccionar nivel</option>
+                        <option value="Principiante">Principiante</option>
+                        <option value="Intermedio">Intermedio</option>
+                        <option value="Avanzado">Avanzado</option>
+                    </select>
+                </div>
+                <button onclick="createSpot()">Crear Spot</button>
+                <button style="background: #999;" onclick="document.getElementById('createSpotForm').style.display='none'">Cancelar</button>
+            </div>
+
+            <table id="spotsTable" class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Nivel</th>
+                        <th>Latitud</th>
+                        <th>Longitud</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="spotsList"></tbody>
+            </table>
+        </div>
+
+        <!-- Sección de API - Registros -->
+        <div id="registrosSection" class="api-section hidden">
+            <h2>📝 Gestión de Registros</h2>
+            
+            <div class="operations">
+                <button onclick="listRegistros()">Listar Registros</button>
+                <button onclick="showCreateRegistroForm()">Crear Registro</button>
+            </div>
+
+            <div id="createRegistroForm" style="display: none; border: 1px solid #ddd; padding: 20px; border-radius: 4px; margin-bottom: 20px;">
+                <h3>Crear Nuevo Registro</h3>
+                <div class="form-group">
+                    <label for="regNombre">Nombre:</label>
+                    <input type="text" id="regNombre" placeholder="Nombre">
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">Email:</label>
+                    <input type="email" id="regEmail" placeholder="Email">
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Contraseña:</label>
+                    <input type="password" id="regPassword" placeholder="Contraseña">
+                </div>
+                <div class="form-group">
+                    <label for="regFecha">Fecha:</label>
+                    <input type="date" id="regFecha">
+                </div>
+                <div class="form-group">
+                    <label for="regBio">Biografía (opcional):</label>
+                    <input type="text" id="regBio" placeholder="Biografía">
+                </div>
+                <button onclick="createRegistro()">Crear Registro</button>
+                <button style="background: #999;" onclick="document.getElementById('createRegistroForm').style.display='none'">Cancelar</button>
+            </div>
+
+            <table id="registrosTable" class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="registrosList"></tbody>
+            </table>
+        </div>
+
+        <footer class="footer">
+            <p>AE5.3 - Autenticación mediante Tokens | Laravel Sanctum | 2026</p>
+        </footer>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000/api';
+        let token = localStorage.getItem('token');
+        let user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
+
+        // Inicializar estado
+        window.addEventListener('load', () => {
+            if (token && user) {
+                showAuthenticated();
+            } else {
+                showNotAuthenticated();
+            }
+        });
+
+        // Login
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if (!email || !password) {
+                showStatus('Por favor completa email y contraseña', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    token = data.token;
+                    user = data.user;
+                    localStorage.setItem('token', token);
+                    localStorage.setItem('user', JSON.stringify(user));
+                    showStatus(`¡Bienvenido ${user.name}!`, 'success');
+                    showAuthenticated();
+                } else {
+                    showStatus(data.message || 'Error en el login', 'error');
+                }
+            } catch (error) {
+                showStatus('Error de conexión: ' + error.message, 'error');
+            }
+        }
+
+        // Logout
+        async function logout() {
+            try {
+                await fetch(`${API_URL}/logout`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+            } catch (error) {
+                console.error('Error en logout:', error);
+            }
+
+            token = null;
+            user = null;
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            showStatus('Sesión cerrada', 'info');
+            showNotAuthenticated();
+        }
+
+        // Mostrar estados
+        function showAuthenticated() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('logoutForm').style.display = 'block';
+            document.getElementById('spotsSection').classList.remove('hidden');
+            document.getElementById('registrosSection').classList.remove('hidden');
+
+            // Mostrar info del usuario
+            const userInfo = document.getElementById('userInfo');
+            userInfo.classList.add('show');
+            userInfo.innerHTML = `
+                <h3>✓ Autenticado como:</h3>
+                <p><strong>Usuario:</strong> ${user.name}</p>
+                <p><strong>Email:</strong> ${user.email}</p>
+                <p><strong>Token:</strong></p>
+                <div class="token-info">${token}</div>
+            `;
+        }
+
+        function showNotAuthenticated() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('logoutForm').style.display = 'none';
+            document.getElementById('spotsSection').classList.add('hidden');
+            document.getElementById('registrosSection').classList.add('hidden');
+            document.getElementById('userInfo').classList.remove('show');
+        }
+
+        // Utility functions
+        function showStatus(message, type) {
+            const status = document.getElementById('authStatus');
+            status.textContent = message;
+            status.className = `status ${type}`;
+        }
+
+        // Spots API
+        async function listSpots() {
+            try {
+                const response = await fetch(`${API_URL}/spots`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.status === 401) {
+                    showStatus('Token inválido o expirado', 'error');
+                    logout();
+                    return;
+                }
+
+                const data = await response.json();
+                const tbody = document.getElementById('spotsList');
+                tbody.innerHTML = '';
+
+                if (data.data && Array.isArray(data.data)) {
+                    data.data.forEach(spot => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${spot.id}</td>
+                                <td>${spot.nombre}</td>
+                                <td>${spot.nivel}</td>
+                                <td>${spot.lat}</td>
+                                <td>${spot.lng}</td>
+                                <td class="actions">
+                                    <button onclick="deleteSpot(${spot.id})">Eliminar</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="6" class="no-data">No hay spots</td></tr>';
+                }
+            } catch (error) {
+                showStatus('Error al listar spots: ' + error.message, 'error');
+            }
+        }
+
+        function showCreateSpotForm() {
+            document.getElementById('createSpotForm').style.display = 'block';
+        }
+
+        async function createSpot() {
+            const nombre = document.getElementById('spotNombre').value;
+            const lat = parseFloat(document.getElementById('spotLat').value);
+            const lng = parseFloat(document.getElementById('spotLng').value);
+            const descripcion = document.getElementById('spotDesc').value;
+            const nivel = document.getElementById('spotNivel').value;
+
+            if (!nombre || !lat || !lng || !descripcion || !nivel) {
+                showStatus('Por favor completa todos los campos', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/spots`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        nombre, lat, lng, descripcion, nivel
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showStatus('Spot creado exitosamente', 'success');
+                    document.getElementById('createSpotForm').style.display = 'none';
+                    // Limpiar formulario
+                    ['spotNombre', 'spotLat', 'spotLng', 'spotDesc', 'spotNivel'].forEach(id => {
+                        document.getElementById(id).value = '';
+                    });
+                    listSpots();
+                } else {
+                    showStatus(data.message || 'Error al crear spot', 'error');
+                }
+            } catch (error) {
+                showStatus('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function deleteSpot(id) {
+            if (!confirm('¿Estás seguro?')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/spots/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    showStatus('Spot eliminado', 'success');
+                    listSpots();
+                } else {
+                    showStatus('Error al eliminar spot', 'error');
+                }
+            } catch (error) {
+                showStatus('Error: ' + error.message, 'error');
+            }
+        }
+
+        // Registros API
+        async function listRegistros() {
+            try {
+                const response = await fetch(`${API_URL}/registros`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.status === 401) {
+                    showStatus('Token inválido o expirado', 'error');
+                    logout();
+                    return;
+                }
+
+                const data = await response.json();
+                const tbody = document.getElementById('registrosList');
+                tbody.innerHTML = '';
+
+                if (data.data && Array.isArray(data.data)) {
+                    data.data.forEach(reg => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${reg.id}</td>
+                                <td>${reg.name}</td>
+                                <td>${reg.email}</td>
+                                <td>${reg.fecha}</td>
+                                <td class="actions">
+                                    <button onclick="deleteRegistro(${reg.id})">Eliminar</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5" class="no-data">No hay registros</td></tr>';
+                }
+            } catch (error) {
+                showStatus('Error al listar registros: ' + error.message, 'error');
+            }
+        }
+
+        function showCreateRegistroForm() {
+            document.getElementById('createRegistroForm').style.display = 'block';
+        }
+
+        async function createRegistro() {
+            const name = document.getElementById('regNombre').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const fecha = document.getElementById('regFecha').value;
+            const biografia = document.getElementById('regBio').value;
+
+            if (!name || !email || !password || !fecha) {
+                showStatus('Por favor completa los campos requeridos', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/registros`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name, email, password, fecha, biografia
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showStatus('Registro creado exitosamente', 'success');
+                    document.getElementById('createRegistroForm').style.display = 'none';
+                    // Limpiar formulario
+                    ['regNombre', 'regEmail', 'regPassword', 'regFecha', 'regBio'].forEach(id => {
+                        document.getElementById(id).value = '';
+                    });
+                    listRegistros();
+                } else {
+                    showStatus(data.message || 'Error al crear registro', 'error');
+                }
+            } catch (error) {
+                showStatus('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function deleteRegistro(id) {
+            if (!confirm('¿Estás seguro?')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/registros/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    showStatus('Registro eliminado', 'success');
+                    listRegistros();
+                } else {
+                    showStatus('Error al eliminar registro', 'error');
+                }
+            } catch (error) {
+                showStatus('Error: ' + error.message, 'error');
+            }
+        }
+    </script>
+</body>
+</html>
